@@ -54,6 +54,8 @@ function switchMode() {
 
         document.querySelector('.header__item-descr').style.color = '#ffffff';
         document.querySelector('.logo > img').src= 'logo/youtube_night.svg';
+        // У лого обычного и для темной темы разная высота, из-за этого прыгает верстка при
+        // переключении. Пришлось изменить у лого для темной темы высоту
     } else {
         night = false;
         document.body.classList.remove('night');
@@ -77,3 +79,38 @@ switcher.addEventListener('change', () => {
     switchMode();
 });
 
+// Создание новых видео
+
+const data = [
+    ['img/thumb_3.webp', 'img/thumb_4.webp', 'img/thumb_5.webp'],
+    ['#3 Верстка на flexbox CSS | Блок преимущества и галерея | Марафон верстки | Артем Исламов', 
+    '#2 Установка spikmi и работа с ветками на Github | Марафон вёрстки Урок 2', 
+    '#1 Верстка реального заказа landing Page | Марафон вёрстки | Артём Исламов'],
+    ['3,6 тыс. просмотров', '4,2 тыс. просмотров', '28 тыс. просмотров'],
+    ['X9SmcY3lM-U', '7BvHoh0BrMw', 'mC8JW_aG2EM']
+];
+
+more.addEventListener('click', () => {
+    const videosWrapper = document.querySelector('.videos__wrapper');
+    more.remove();
+
+    for (let i = 0; i < data[0].length; i++) {
+        let card = document.createElement('a');
+        card.classList.add('videos__item', 'videos__item-active');
+        card.setAttribute('data-url', data[3][i]);
+        card.innerHTML = `
+            <img src="${data[0][i]}" alt="thumb">
+            <div class="videos__item-descr">
+                ${data[1][i]}
+            </div>
+            <div class="videos__item-views">
+                ${data[2][i]}
+            </div>
+        `;
+
+        videosWrapper.appendChild(card);
+        setTimeout(() => {
+            card.classList.remove('videos__item-active');
+        }, 10);
+    }
+});
