@@ -112,6 +112,7 @@ more.addEventListener('click', () => {
         setTimeout(() => {
             card.classList.remove('videos__item-active');
         }, 10);
+        bindNewModal(card);
     }
 
     sliceTitle('.videos__item-descr', 100);  // Обрезаются заголовки загруженных видео
@@ -133,3 +134,30 @@ function sliceTitle(selector, count) {
 }
 
 sliceTitle('.videos__item-descr', 100);
+
+
+function openModal() {
+    modal.style.display = 'block';
+}
+
+function closeModal() {
+    modal.style.display = 'none';
+}
+
+function bindModal(cards) {
+    videos.forEach(item => {
+        item.addEventListener('click', (e) => {
+            e.preventDefault();
+            openModal();
+        });
+    });
+}
+
+bindModal(videos);
+
+function bindNewModal(cards) {
+    cards.addEventListener('click', (e) => {
+        e.preventDefault();
+        openModal();
+    });
+}
