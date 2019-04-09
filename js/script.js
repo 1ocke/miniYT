@@ -135,6 +135,7 @@ function sliceTitle(selector, count) {
 
 sliceTitle('.videos__item-descr', 100);
 
+// Открытые модального окна
 
 function openModal() {
     modal.style.display = 'block';
@@ -161,3 +162,11 @@ function bindNewModal(cards) {
         openModal();
     });
 }
+
+// Закрытие модального окна, нажатием вне его области
+
+modal.addEventListener('click', (e) => {
+    if (!e.target.classList.contains('modal__body')) {  // Отслеживаем клик. Клик вне modal__body
+        closeModal();
+    }
+});
