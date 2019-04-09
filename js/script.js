@@ -170,3 +170,25 @@ modal.addEventListener('click', (e) => {
         closeModal();
     }
 });
+
+// Работа с youtube iframe API
+
+function createVideo() {
+    var tag = document.createElement('script');
+
+    // Создает тег скрипт, помещает его перед основным скриптом.
+
+    tag.src = "https://www.youtube.com/iframe_api";
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+    setTimeout(() => {
+        player = new YT.Player('frame', {
+            height: '100%',
+            width: '100%',
+            videoId: 'M7lc1UVf-VE'
+          });
+    }, 300);
+}
+
+createVideo();
