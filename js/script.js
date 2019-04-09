@@ -38,6 +38,7 @@ bindSlideToggle('.hamburger', '[data-slide="nav"]', '.header__menu', 'slide-acti
 function switchMode() {
     if (night === false) {
         night = true;
+
         document.body.classList.add('night');
 
         document.querySelectorAll('.hamburger > line').forEach(item => {
@@ -113,6 +114,23 @@ more.addEventListener('click', () => {
             card.classList.remove('videos__item-active');
         }, 10);
         bindNewModal(card);
+
+        if (night === true) { // Фикс темного режима при загрузке новых видео
+    
+            document.querySelectorAll('.hamburger > line').forEach(item => {
+                item.style.stroke = '#ffffff';
+            });
+    
+            document.querySelectorAll('.videos__item-descr').forEach(item => {
+                item.style.color = '#ffffff';
+            });
+    
+            document.querySelectorAll('.videos__item-views').forEach(item => {
+                item.style.color = '#ffffff';
+            });
+    
+            document.querySelector('.header__item-descr').style.color = '#ffffff';
+        }
     }
 
     sliceTitle('.videos__item-descr', 100);  // Обрезаются заголовки загруженных видео
