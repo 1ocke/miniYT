@@ -113,4 +113,23 @@ more.addEventListener('click', () => {
             card.classList.remove('videos__item-active');
         }, 10);
     }
+
+    sliceTitle('.videos__item-descr', 100);  // Обрезаются заголовки загруженных видео
 });
+
+// Обрезаем заголовки
+
+function sliceTitle(selector, count) {
+    document.querySelectorAll(selector).forEach(item => {
+        item.textContent.trim(); // Обрезает лишние пробелы
+
+        if (item.textContent.length.length < count) { // Если длина строки, меньше 100
+            return;                                   // То ничего не происходит
+        } else {
+            const str = item.textContent.slice(0, count + 1) + '...'; // Если больше, то
+            item.textContent = str;                                   // строка от 0 до count
+        }
+    });
+}
+
+sliceTitle('.videos__item-descr', 100);
