@@ -143,12 +143,15 @@ function openModal() {
 
 function closeModal() {
     modal.style.display = 'none';
+    player.stopVideo();  // Закрываем видео, после закрытия модалки
 }
 
 function bindModal(cards) {
     videos.forEach(item => {
         item.addEventListener('click', (e) => {
             e.preventDefault();
+            const id = item.getAttribute('data-url'); //Получаем id от наших видео
+            loadVideo(id); // Загружаем id в API
             openModal();
         });
     });
@@ -159,6 +162,8 @@ bindModal(videos);
 function bindNewModal(cards) {
     cards.addEventListener('click', (e) => {
         e.preventDefault();
+        const id = cards.getAttribute('data-url'); //Получаем id от наших видео
+        loadVideo(id); // Загружаем id в API
         openModal();
     });
 }
@@ -171,7 +176,7 @@ modal.addEventListener('click', (e) => {
     }
 });
 
-// Работа с youtube iframe API
+// Работа с youtube iframe API. Добавляем скрипт с ютуба.
 
 function createVideo() {
     var tag = document.createElement('script');
@@ -192,3 +197,11 @@ function createVideo() {
 }
 
 createVideo();
+
+// Загружаем нужные видео в плеер
+
+function loadVideo(id) {
+    player.loadVideoById({
+        videoId: `${id}`
+    });
+}
