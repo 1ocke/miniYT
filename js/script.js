@@ -82,59 +82,54 @@ switcher.addEventListener('change', () => {
 
 // Создание новых видео
 
-const data = [
-    ['img/thumb_3.webp', 'img/thumb_4.webp', 'img/thumb_5.webp'],
-    ['#3 Верстка на flexbox CSS | Блок преимущества и галерея | Марафон верстки | Артем Исламов', 
-    '#2 Установка spikmi и работа с ветками на Github | Марафон вёрстки Урок 2', 
-    '#1 Верстка реального заказа landing Page | Марафон вёрстки | Артём Исламов'],
-    ['3,6 тыс. просмотров', '4,2 тыс. просмотров', '28 тыс. просмотров'],
-    ['X9SmcY3lM-U', '7BvHoh0BrMw', 'mC8JW_aG2EM']
-];
+// const data = [
+//     ['img/thumb_3.webp', 'img/thumb_4.webp', 'img/thumb_5.webp'],
+//     ['#3 Верстка на flexbox CSS | Блок преимущества и галерея | Марафон верстки | Артем Исламов', 
+//     '#2 Установка spikmi и работа с ветками на Github | Марафон вёрстки Урок 2', 
+//     '#1 Верстка реального заказа landing Page | Марафон вёрстки | Артём Исламов'],
+//     ['3,6 тыс. просмотров', '4,2 тыс. просмотров', '28 тыс. просмотров'],
+//     ['X9SmcY3lM-U', '7BvHoh0BrMw', 'mC8JW_aG2EM']
+// ];
 
-more.addEventListener('click', () => {
-    const videosWrapper = document.querySelector('.videos__wrapper');
-    more.remove();
+// more.addEventListener('click', () => {
+//     const videosWrapper = document.querySelector('.videos__wrapper');
+//     more.remove();
 
-    for (let i = 0; i < data[0].length; i++) {
-        let card = document.createElement('a');
-        card.classList.add('videos__item', 'videos__item-active');
-        card.setAttribute('data-url', data[3][i]);
-        card.innerHTML = `
-            <img src="${data[0][i]}" alt="thumb">
-            <div class="videos__item-descr">
-                ${data[1][i]}
-            </div>
-            <div class="videos__item-views">
-                ${data[2][i]}
-            </div>
-        `;
+//     for (let i = 0; i < data[0].length; i++) {
+//         let card = document.createElement('a');
+//         card.classList.add('videos__item', 'videos__item-active');
+//         card.setAttribute('data-url', data[3][i]);
+//         card.innerHTML = `
+//             <img src="${data[0][i]}" alt="thumb">
+//             <div class="videos__item-descr">
+//                 ${data[1][i]}
+//             </div>
+//             <div class="videos__item-views">
+//                 ${data[2][i]}
+//             </div>
+//         `;
 
-        videosWrapper.appendChild(card);
-        setTimeout(() => {
-            card.classList.remove('videos__item-active');
-        }, 10);
-        bindNewModal(card);
+//         videosWrapper.appendChild(card);
+//         setTimeout(() => {
+//             card.classList.remove('videos__item-active');
+//         }, 10);
 
-        if (night === true) { // Фикс темного режима при загрузке новых видео
+//         if (night) { // Фикс темного режима при загрузке новых видео
     
-            document.querySelectorAll('.hamburger > line').forEach(item => {
-                item.style.stroke = '#ffffff';
-            });
+//             document.querySelectorAll('.videos__item-descr').forEach(item => {
+//                 item.style.color = '#ffffff';
+//             });
     
-            document.querySelectorAll('.videos__item-descr').forEach(item => {
-                item.style.color = '#ffffff';
-            });
-    
-            document.querySelectorAll('.videos__item-views').forEach(item => {
-                item.style.color = '#ffffff';
-            });
-    
-            document.querySelector('.header__item-descr').style.color = '#ffffff';
-        }
-    }
+//             document.querySelectorAll('.videos__item-views').forEach(item => {
+//                 item.style.color = '#ffffff';
+//             });
+//         }
 
-    sliceTitle('.videos__item-descr', 100);  // Обрезаются заголовки загруженных видео
-});
+//         bindNewModal(card);
+//     }
+
+//     sliceTitle('.videos__item-descr', 100);  // Обрезаются заголовки загруженных видео
+// });
 
 // Обрезаем заголовки
 
@@ -193,6 +188,14 @@ modal.addEventListener('click', (e) => {
         closeModal();
     }
 });
+
+// Закрытие модального окна через escape
+
+document.addEventListener('keydown', function (evt) {
+    if (evt.keyCode === 27) {
+        closeModal();
+    }
+}); 
 
 // Работа с youtube iframe API. Добавляем скрипт с ютуба.
 
