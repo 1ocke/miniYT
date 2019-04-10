@@ -3,7 +3,8 @@
 const switcher = document.querySelector('#cbx'),
       more     = document.querySelector('.more'),
       modal    = document.querySelector('.modal'),
-      videos   = document.querySelectorAll('.videos__item');
+      videos   = document.querySelectorAll('.videos__item'),
+      videosWrapper = document.querySelector('.videos__wrapper');
 // Те видео, которые будут выводиться на экран
 let player;
 
@@ -131,13 +132,123 @@ switcher.addEventListener('change', () => {
 //     sliceTitle('.videos__item-descr', 100);  // Обрезаются заголовки загруженных видео
 // });
 
+// Data API загружаем видео с ютуба
+
+function start() {
+	gapi.client.init({
+		'apiKey': 'AIzaSyDZ_HqCJJ1aahZbeh8PrtKe5XqYNiS-Y0E',
+		'discoveryDocs': ["https://www.googleapis.com/discovery/v1/apis/youtube/v3/rest"]
+	}).then(function() {
+		return gapi.client.youtube.playlistItems.list({
+			"part": "snippet,contentDetails",
+			"maxResults": '6',
+			"playlistId": "PL3LQJkGQtzc4gsrFkm4MjWhTXhopsMgpv"
+		});
+	}).then(function(response) {
+		console.log(response.result);
+		
+
+		response.result.items.forEach(item => {
+			let card = document.createElement('a');
+
+			card.classList.add('videos__item', 'videos__item-active');
+			card.setAttribute('data-url', item.contentDetails.videoId);
+
+			card.innerHTML = `
+				<img src="${item.snippet.thumbnails.high.url}" alt="thumb">
+				<div class="videos__item-descr">
+					${item.snippet.title}
+				</div>
+				<div class="videos__item-views">
+					2.7 тыс. просмотров
+				</div>
+			`;
+			videosWrapper.appendChild(card);
+			setTimeout(() => {
+				card.classList.remove('videos__item-active');
+			}, 10);
+			if (night === true) {
+				card.querySelector('.videos__item-descr').style.color = '#fff';
+				card.querySelector('.videos__item-views').style.color = '#fff';
+			}
+		});
+
+		sliceTitle('.videos__item-descr', 80);
+		bindModal(document.querySelectorAll('.videos__item'));
+
+	}).catch( e => {
+		console.log(e);
+	});
+}
+
+more.addEventListener('click', () => {
+	more.remove();
+	gapi.load('client', start);
+});
+
+function search(target) {
+	gapi.client.init({
+		'apiKey': 'AIzaSyDZ_HqCJJ1aahZbeh8PrtKe5XqYNiS-Y0E',
+		'discoveryDocs': ["https://www.googleapis.com/discovery/v1/apis/youtube/v3/rest"]
+	}).then(function() {
+		return	gapi.client.youtube.search.list({
+			'maxResults': '10',
+			'part': 'snippet',
+			'q': `${target}`,
+			'type': ''
+		});
+	}).then(function(response) {
+		console.log(response.result);
+		// videosWrapper.innerHTML = '';
+		while (videosWrapper.firstChild) {
+			videosWrapper.removeChild(videosWrapper.firstChild);
+		}
+
+		response.result.items.forEach(item => {
+			let card = document.createElement('a');
+
+			card.classList.add('videos__item', 'videos__item-active');
+			card.setAttribute('data-url', item.id.videoId);
+
+			card.innerHTML = `
+                <img src="${item.snippet.thumbnails.high.url}" alt="thumb">
+                <div class="videos__item-descr">
+                    ${item.snippet.title}
+                </div>
+                <div class="videos__item-views">
+                    2.7 тыс. просмотров
+                </div>
+            `;
+			videosWrapper.appendChild(card);
+			setTimeout(() => {
+				card.classList.remove('videos__item-active');
+			}, 10);
+			if (night === true) {
+				card.querySelector('.videos__item-descr').style.color = '#fff';
+				card.querySelector('.videos__item-views').style.color = '#fff';
+			}
+		});
+
+		sliceTitle('.videos__item-descr', 80);
+		bindModal(document.querySelectorAll('.videos__item'));
+	});
+}
+
+document.querySelector('.search').addEventListener('submit', (e) => {
+	e.preventDefault();
+	gapi.load('client', () => {
+		search(document.querySelector('.search > input').value);
+	});
+	document.querySelector('.search > input').value = '';
+});
+
 // Обрезаем заголовки
 
 function sliceTitle(selector, count) {
     document.querySelectorAll(selector).forEach(item => {
         item.textContent.trim(); // Обрезает лишние пробелы
 
-        if (item.textContent.length.length < count) { // Если длина строки, меньше 100
+        if (item.textContent.length < count) { // Если длина строки, меньше 100
             return;                                   // То ничего не происходит
         } else {
             const str = item.textContent.slice(0, count + 1) + '...'; // Если больше, то
@@ -146,7 +257,7 @@ function sliceTitle(selector, count) {
     });
 }
 
-sliceTitle('.videos__item-descr', 100);
+sliceTitle('.videos__item-descr', 80);
 
 // Открытые модального окна
 
@@ -160,7 +271,7 @@ function closeModal() {
 }
 
 function bindModal(cards) {
-    videos.forEach(item => {
+    cards.forEach(item => {
         item.addEventListener('click', (e) => {
             e.preventDefault();
             const id = item.getAttribute('data-url'); //Получаем id от наших видео
@@ -170,12 +281,10 @@ function bindModal(cards) {
     });
 }
 
-bindModal(videos);
-
-function bindNewModal(cards) {
-    cards.addEventListener('click', (e) => {
+function bindNewModal(card) {
+    card.addEventListener('click', (e) => {
         e.preventDefault();
-        const id = cards.getAttribute('data-url'); //Получаем id от наших видео
+        const id = card.getAttribute('data-url'); //Получаем id от наших видео
         loadVideo(id); // Загружаем id в API
         openModal();
     });
@@ -218,8 +327,6 @@ function createVideo() {
 }
 
 createVideo();
-
-// Загружаем нужные видео в плеер
 
 function loadVideo(id) {
     player.loadVideoById({
